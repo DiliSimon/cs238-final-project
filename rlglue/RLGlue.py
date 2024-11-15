@@ -55,8 +55,8 @@ def forceConnection():
 		except TypeError:
 			port = Network.kDefaultPort
 		
-		print "RL-Glue Python Experiment Codec Version: "+theCodecVersion+" (Build "+theSVNVersion+")"
-		print "\tConnecting to " + host + " on port " + str(port) + "..."
+		print("RL-Glue Python Experiment Codec Version: "+theCodecVersion+" (Build "+theSVNVersion+")")
+		print("\tConnecting to " + host + " on port " + str(port) + "...")
 		sys.stdout.flush()
 		
 		

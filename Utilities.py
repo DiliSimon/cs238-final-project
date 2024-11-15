@@ -109,19 +109,21 @@ class InvasiveUtility:
         :param upStreamRate: upstream rate
         :return: a matrix
         """
-        n = len(adj)
+        n = adj.shape[0]
         reaches = range(len(edges))#np.unique(edges[:,1])
         nbr_reaches = len(reaches)
         parameters = np.ones((nbr_reaches, nbr_reaches))
         allpaths = networkx.all_pairs_dijkstra_path(notDirectedG)
 
         for i in range(nbr_reaches):
+            edges = list(edges)
             src_edge = edges[i]#reaches[i]#parent of edge
             for j in range(nbr_reaches):
                 if i == j:
                     continue
 
                 dest_edge = edges[j]
+                allpaths = dict(networkx.all_pairs_dijkstra_path(notDirectedG))
                 first = allpaths[src_edge[0]][dest_edge[0]]
                 second = allpaths[src_edge[0]][dest_edge[1]]
                 third = allpaths[src_edge[1]][dest_edge[0]]
@@ -193,9 +195,9 @@ class InvasiveUtility:
         cost = 0
         nbr_reaches = len(state) / H
         #actionParameterObj=ActionParameterClass(actionParameterObj)
-        for i in range(nbr_reaches):
+        for i in range(int(nbr_reaches)):
             actionReach = action[i]
-            S_reach = state[i * H:(i + 1) * H]
+            S_reach = state[int(i * H):int((i + 1) * H)]
             cost += InvasiveUtility.get_budget_cost_actions_reach(actionReach, S_reach,
                 actionParameterObj.eradicationCost, actionParameterObj.restorationCost,
                 actionParameterObj.varEradicationCost,
@@ -215,7 +217,7 @@ class InvasiveUtility:
         nbr_reaches = len(action)
         for i in range(nbr_reaches):
             action_type = action[i]
-            S_reach = state[i * H:(i + 1) * H]
+            S_reach = state[int(i * H):int((i + 1) * H)]
             if(type(action_type) is str and action_type == InvasiveUtility.Erad_Sym) or (
             type(action_type) is not str and action_type == InvasiveUtility.Erad):
                 if type(S_reach) is str:
@@ -350,7 +352,7 @@ class InvasiveUtility:
             randGen=random
             if not seed is None:
                 randGen.seed(seed)
-        parents = range(0, n - 1)
+        parents = list(range(0, n - 1))
         nodes = []
         visited = [0] * (n - 1)
         #each node can have only one child and maximum of two parents

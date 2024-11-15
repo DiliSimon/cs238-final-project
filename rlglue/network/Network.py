@@ -103,6 +103,7 @@ class Network:
                 self.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 self.sock.connect((host, port))
             except socket.error:
+                print('error')
                 self.sock = None
                 time.sleep(retryTimeout)
             else:

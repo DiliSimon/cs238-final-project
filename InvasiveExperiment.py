@@ -8,7 +8,6 @@
 #
 
 import numpy
-from numpy.numarray import array
 
 import random
 
@@ -36,7 +35,7 @@ def demo():
 
 
 def printScore(afterEpisodes, score_tuple):
-    print "%d\t\t%.2f\t\t%.2f" % (afterEpisodes, score_tuple[0], score_tuple[1])
+    print("%d\t\t%.2f\t\t%.2f" % (afterEpisodes, score_tuple[0], score_tuple[1]))
 
 #
 # Tell the agent to stop learning, then execute n episodes with his current
@@ -73,23 +72,23 @@ def single_evaluation():
     printScore(0, this_score)
 
 RLGlue.RL_init()
-print "Telling the environment to use fixed start state."
+print("Telling the environment to use fixed start state.")
 nbrReaches=7
 habitatSize=4
-S = array([random.randint(1, 3) for i in xrange(nbrReaches * habitatSize)])
+S = numpy.array([random.randint(1, 3) for i in xrange(nbrReaches * habitatSize)])
 #S=array([1,1,2, 1, 3, 3, 1])
 S = ",".join(map(str, S))
-print S
+print(S)
 RLGlue.RL_env_message("set-start-state "+S)
 RLGlue.RL_start()
 
-print "Starting offline demo\n----------------------------\nWill alternate learning for 10 episodes, then freeze policy and evaluate for 10 episodes.\n"
-print "After Episode\tMean Return\tStandard Deviation\n-------------------------------------------------------------------------"
+print("Starting offline demo\n----------------------------\nWill alternate learning for 10 episodes, then freeze policy and evaluate for 10 episodes.\n")
+print("After Episode\tMean Return\tStandard Deviation\n-------------------------------------------------------------------------")
 demo()
 
-print "Evaluating the agent again with the random start state:\n\t\tMean Return\tStandardDeviation\n-----------------------------------------------------"
+print("Evaluating the agent again with the random start state:\n\t\tMean Return\tStandardDeviation\n-----------------------------------------------------")
 RLGlue.RL_env_message("set-random-start-state")
 single_evaluation()
 
 RLGlue.RL_cleanup()
-print "\nProgram Complete."
+print("\nProgram Complete.")
