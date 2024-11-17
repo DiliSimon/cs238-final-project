@@ -25,7 +25,7 @@ class InvasiveEnvironment(Environment):
     the domain and action parameters will be set by default. I used some of Brian Tanner's mines code for this environment.
     """
 
-    def __init__(self, simulationParameterObj, actionParameterObj, Bad_Action_Penalty, nbrReaches=7, habitatSize=4, fixedStartState=False,
+    def __init__(self, simulationParameterObj, actionParameterObj, Bad_Action_Penalty=-10000.0, nbrReaches=7, habitatSize=4, fixedStartState=False,
                  discountFactor=0.9, seed=None):
         """
         :param simulationParameterObj (SimulationParameterClass), contains all the parameters for the domain
@@ -121,7 +121,7 @@ class InvasiveEnvironment(Environment):
 
         returnObs = Observation()
         #        print self.state
-        returnObs.intArray = map(int, list(self.state))
+        returnObs.intArray = list(self.state)
         return returnObs
 
     def env_step(self, action):

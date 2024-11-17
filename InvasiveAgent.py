@@ -55,7 +55,7 @@ class InvasiveAgent(Agent):
         #find the actions for the state
         stateId = SamplingUtility.getStateId(state)
         #print 'state '+ str(state)[1:-1]
-        if len(self.Q_value_function) == 0 or not self.Q_value_function.has_key(stateId):
+        if len(self.Q_value_function) == 0 or not stateId in self.Q_value_function:
             self.all_allowed_actions[stateId] = InvasiveUtility.getActions(state, self.nbrReaches, self.habitatSize)
             self.Q_value_function[stateId] = len(self.all_allowed_actions[stateId]) * [0.0]
         if not self.exploringFrozen and self.randGenerator.random() < self.sarsa_epsilon:
