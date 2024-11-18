@@ -42,28 +42,58 @@ if __name__ == "__main__":
         agent.agent_message("freeze learning")
         
         # evaluate agent for n episodes
+        # n = 10 
+        # sum = 0
+        # sum_of_squares = 0
+        # for episode in range(n):
+        #     Exp.setAgentState(S)
+        #     # print("initial state", Exp.state)
+        #     first_obs = Exp.env_start()
+        #     first_action = agent.agent_start(first_obs)
+        #     reward_observation_terminal = Exp.env_step(first_action)
+        #     for k in range(n_steps):
+        #         action = agent.agent_step(reward_observation_terminal.r, reward_observation_terminal.o)
+        #         reward_observation_terminal = Exp.env_step(action)
+        #         sum += reward_observation_terminal.r
+        #         sum_of_squares += sum**2 
+        
+
+        # evaluate agent for n episodes (updated)
         n = 10 
-        sum = 0
-        sum_of_squares = 0
         for episode in range(n):
+            sum = 0  # reset per episode
+            sum_of_squares = 0  # reset per episode
+
             Exp.setAgentState(S)
-            # print("initial state", Exp.state)
             first_obs = Exp.env_start()
             first_action = agent.agent_start(first_obs)
             reward_observation_terminal = Exp.env_step(first_action)
+
             for k in range(n_steps):
                 action = agent.agent_step(reward_observation_terminal.r, reward_observation_terminal.o)
                 reward_observation_terminal = Exp.env_step(action)
-                sum += reward_observation_terminal.r
-                sum_of_squares += sum**2
-        
+                sum += reward_observation_terminal.r  # accumulate total reward for the episode
+            sum_of_squares += sum**2  # outside the for loop for global variance approach 
+
         mean = sum / n
-        variance = (sum_of_squares - n * mean * mean) / (n - 1.0)
+        if n <= 1:
+            print("Not enough episodes to calculate variance.")
+            variance = 0
+        else:
+            variance = (sum_of_squares - n * mean * mean) / (n - 1.0)
         standard_dev = np.sqrt(variance)
+        
 
         print("run: ", i)
         print("mean: ", mean)
         print("standard deviation: ", standard_dev)
+
+        # # abby debug
+        # print(f"Sum of rewards: {sum}")
+        # print(f"Sum of squares: {sum_of_squares}")
+        # print(f"Mean: {mean}")
+        # print(f"Variance calculation: {sum_of_squares - n * mean * mean}")
+
         
         # unfreeze learning
         agent.agent_message("unfreeze learning")
