@@ -20,7 +20,7 @@ class SamplingUtility:
     def getStateId(s):
         sid = 0
         s = tuple(s)
-        if SamplingUtility.sMap.has_key(s):
+        if s in SamplingUtility.sMap:
             sid = SamplingUtility.sMap.get(s)
         else:
             sid = len(SamplingUtility.sMap.keys())
@@ -253,18 +253,19 @@ class InvasiveUtility:
         :param H:
         :return:
         """
+        list_state = list(state)
         action = [[]] * nbr_reaches
         for r in range(nbr_reaches):
-            S_reach = state[r * H:(r + 1) * H]
-            if sum(S_reach == InvasiveUtility.Nat) == H:
+            S_reach = list_state[int(r * H):int((r + 1) * H)]
+            if sum(1 for i in S_reach if i == InvasiveUtility.Nat) == H:
                 action[r] = [InvasiveUtility.Not]
-            elif sum(S_reach == InvasiveUtility.Tam) == 0:
+            elif sum(1 for i in S_reach if i == InvasiveUtility.Tam) == 0:
                 action[r] = [InvasiveUtility.Not, InvasiveUtility.Res]
-            elif sum(S_reach == InvasiveUtility.Tam) == H:
+            elif sum(1 for i in S_reach if i == InvasiveUtility.Tam) == H:
                 action[r] = [InvasiveUtility.Not, InvasiveUtility.Erad, InvasiveUtility.EradRes]
-            elif sum(S_reach == InvasiveUtility.Emp) == H:
+            elif sum(1 for i in S_reach if i == InvasiveUtility.Emp) == H:
                 action[r] = [InvasiveUtility.Not, InvasiveUtility.Res]
-            elif sum(S_reach == InvasiveUtility.Emp) == 0:#N or T
+            elif sum(1 for i in S_reach if i == InvasiveUtility.Emp) == 0:#N or T
                 action[r] = [InvasiveUtility.Not, InvasiveUtility.Erad, InvasiveUtility.EradRes]
             else:
                 action[r] = [InvasiveUtility.Not, InvasiveUtility.Erad, InvasiveUtility.Res, InvasiveUtility.EradRes]
