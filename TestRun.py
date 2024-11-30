@@ -89,13 +89,19 @@ if __name__ == "__main__":
     n_runs = 1000
     # used to save the mean values for each run
 
-    # stored_mean = np.ones(n_runs)
-    # stored_std_dev = np.ones(n_runs)
-    stored_mean = []
-    stored_std_dev = []
+    stored_mean = np.ones(n_runs)
+    stored_std_dev = np.ones(n_runs)
 
     # alternate between training and evaluating agent for every 10 episodes
     for i in range(n_runs):
+
+        # Dynamically adjust parameters during training
+        if i % 50 == 0 and i > 0:  # Adjust every 50 runs
+            new_epsilon = max(0.01, agent.sarsa_epsilon * 0.90)  # Reduce exploration
+            new_stepsize = max(0.01, agent.sarsa_stepsize * 0.99)  # Reduce learning rate
+            agent.adjust_parameters(new_epsilon=new_epsilon, new_stepsize=new_stepsize)
+            print(f"Run {i}: Adjusted sarsa_epsilon to {agent.sarsa_epsilon}, sarsa_stepsize to {agent.sarsa_stepsize}")
+
         # train agent for 10 episodes
         for episode in range(10):
             Exp.setAgentState(S)
@@ -107,13 +113,6 @@ if __name__ == "__main__":
                 action = agent.agent_step(reward_observation_terminal.r, reward_observation_terminal.o)
                 reward_observation_terminal = Exp.env_step(action)
         
-        # Dynamically reduce exploration and learning rate
-        new_epsilon = max(0.01, agent.sarsa_epsilon * 0.99)  # Gradually reduce epsilon, min 0.01
-        new_stepsize = max(0.01, agent.sarsa_stepsize * 0.99)  # Gradually reduce stepsize, min 0.01
-        agent.adjust_parameters(new_epsilon=new_epsilon, new_stepsize=new_stepsize)
-
-        print(f"Run {i + 1}: Adjusted epsilon = {new_epsilon}, stepsize = {new_stepsize}")
-
         # freeze learning
         agent.agent_message("freeze learning")
         # freeze exploring
@@ -137,16 +136,14 @@ if __name__ == "__main__":
             sum_of_squares += sum**2  # outside the for loop for global variance approach 
 
         mean = sum / n
-        # stored_mean[i] = mean
-        stored_mean.append(mean)
+        stored_mean[i] = mean
         if n <= 1:
             print("Not enough episodes to calculate variance.")
             variance = 0
         else:
             variance = (sum_of_squares - n * mean * mean) / (n - 1.0)
         standard_dev = np.sqrt(variance)
-        # stored_std_dev[i] = standard_dev
-        stored_std_dev.append(standard_dev)
+        stored_std_dev[i] = standard_dev
      
 
         print("run: ", i)
