@@ -107,6 +107,13 @@ if __name__ == "__main__":
                 action = agent.agent_step(reward_observation_terminal.r, reward_observation_terminal.o)
                 reward_observation_terminal = Exp.env_step(action)
         
+        # Dynamically reduce exploration and learning rate
+        new_epsilon = max(0.01, agent.sarsa_epsilon * 0.99)  # Gradually reduce epsilon, min 0.01
+        new_stepsize = max(0.01, agent.sarsa_stepsize * 0.99)  # Gradually reduce stepsize, min 0.01
+        agent.adjust_parameters(new_epsilon=new_epsilon, new_stepsize=new_stepsize)
+
+        print(f"Run {i + 1}: Adjusted epsilon = {new_epsilon}, stepsize = {new_stepsize}")
+
         # freeze learning
         agent.agent_message("freeze learning")
         # freeze exploring

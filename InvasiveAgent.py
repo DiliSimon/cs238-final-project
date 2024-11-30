@@ -158,6 +158,14 @@ class InvasiveAgent(Agent):
             return "message understood, exploring frozen"
 
         return "Invasive agent does not understand your message."
+    
+    # Update InvasiveAgent to allow dynamic adjustment of sarsa_epsilon and sarsa_stepsize during training
+    def adjust_parameters(self, new_epsilon=None, new_stepsize=None):
+        """Dynamically adjust exploration rate and learning rate."""
+        if new_epsilon is not None:
+            self.sarsa_epsilon = new_epsilon
+        if new_stepsize is not None:
+            self.sarsa_stepsize = new_stepsize
 
 
 if __name__ == "__main__":
