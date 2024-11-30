@@ -25,8 +25,10 @@ class InvasiveEnvironment(Environment):
     the domain and action parameters will be set by default. I used some of Brian Tanner's mines code for this environment.
     """
 
-    def __init__(self, simulationParameterObj, actionParameterObj, Bad_Action_Penalty=-10000.0, nbrReaches=7, habitatSize=4, fixedStartState=False,
-                 discountFactor=0.9, seed=None):
+    # def __init__(self, simulationParameterObj, actionParameterObj, Bad_Action_Penalty=-10000.0, nbrReaches=7, habitatSize=4, fixedStartState=False,
+    #              discountFactor=0.9, seed=None):
+    def __init__(self, simulationParameterObj=None, actionParameterObj=None, Bad_Action_Penalty=-10000,
+                 fixedStartState=True, nbrReaches=7, habitatSize=4, discountFactor=0.9, seed=None):
         """
         :param simulationParameterObj (SimulationParameterClass), contains all the parameters for the domain
         :param actionParameterObj (ActionParameterClass), contains all the parameters for the actions
@@ -38,6 +40,11 @@ class InvasiveEnvironment(Environment):
         :param discountFactor (float), discount factor
         :param seed (int), seed for random number generator (default=None)
         """
+        self.simulationParameterObj = simulationParameterObj
+        self.actionParameterObj = actionParameterObj
+        self.nbrReaches = nbrReaches  # Store as attribute
+        self.habitatSize = habitatSize  # Store as attribute
+
         self.seed = seed
         self.fixedStartState = fixedStartState
         self.discountFactor = discountFactor
