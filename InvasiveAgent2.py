@@ -15,7 +15,7 @@ from rlglue.agent.Agent import Agent
 from rlglue.types import Action, Observation
 from rlglue.utils import TaskSpecVRLGLUE3
 
-class InvasiveAgent(Agent):
+class InvasiveAgent2(Agent):
     randGenerator = Random()
     lastAction = Action()
     lastObservation = Observation()
@@ -98,9 +98,9 @@ class InvasiveAgent(Agent):
         if type(newAction) is tuple:
             newAction = list(newAction)
         Q_sa = self.Q_value_function[lastStateId][lastActionIdx]
-        Q_sprime_aprime = self.Q_value_function[SamplingUtility.getStateId(newState)][
-                          self.all_allowed_actions[SamplingUtility.getStateId(newState)].index(tuple(newAction))]
-        new_Q_sa = Q_sa + self.sarsa_stepsize * (reward + self.sarsa_gamma * Q_sprime_aprime - Q_sa)
+        Q_sprime_aprime = self.Q_value_function[SamplingUtility.getStateId(newState)]
+        # changed bottom line to get max of Q_sprime_aprime to do Q-learning instead
+        new_Q_sa = Q_sa + self.sarsa_stepsize * (reward + self.sarsa_gamma * max(Q_sprime_aprime) - Q_sa)
         if not self.policyFrozen:
             self.Q_value_function[SamplingUtility.getStateId(lastState)][
             self.all_allowed_actions[SamplingUtility.getStateId(lastState)].index(tuple(lastAction))] = new_Q_sa
@@ -169,4 +169,4 @@ class InvasiveAgent(Agent):
 
 
 if __name__ == "__main__":
-    AgentLoader.loadAgent(InvasiveAgent())
+    AgentLoader.loadAgent(InvasiveAgent2())
