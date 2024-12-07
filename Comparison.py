@@ -61,7 +61,7 @@ def random_policy(environment, n_steps, initial_state):
 
 if __name__ == "__main__":
 
-    nbrReaches = 6
+    nbrReaches = 3
     habitatSize = 2
     # initialize fixed start state
     S = np.array([random.randint(1, 3) for i in range(nbrReaches * habitatSize)])
@@ -91,9 +91,8 @@ if __name__ == "__main__":
     print("Random Policy - Mean Reward:", random_mean)
     print("Random Policy - Std Deviation:", random_std)
 
-
     # number of alternate training and evaluating steps
-    n_runs = 1000*10
+    n_runs = 1000
     
     '''SARSA'''
     # used to save the mean values for each run
@@ -245,6 +244,21 @@ if __name__ == "__main__":
     learned_mean_Q = np.mean(stored_mean_Q)
     learned_std_Q = np.std(stored_mean_Q)
     
+    # Get the running average for the mean
+    running_average_mean_SARSA = np.cumsum(stored_mean_SARSA) / np.arange(1, stored_mean_SARSA.size + 1)
+    running_average_mean_Q = np.cumsum(stored_mean_Q) / np.arange(1, stored_mean_Q.size + 1)
+
+    # Get the running average for the standard deviation
+    running_average_std_SARSA = np.cumsum(stored_std_dev_SARSA) / np.arange(1, stored_std_dev_SARSA.size + 1)
+    running_average_std_Q = np.cumsum(stored_std_dev_Q) / np.arange(1, stored_std_dev_Q.size + 1)
+
+    # specify path to save data
+    file_path = 'data/output.csv'
+
+    # Save data as csv
+    data = np.column_stack((running_average_mean_SARSA, running_average_mean_Q, running_average_std_SARSA, running_average_std_Q))
+    np.savetxt(file_path, data, delimiter=",", fmt="%.2f", header="SARSA_mean,Q_mean,SARSA_std,Q_std", comments="")
+
     # Comparison
     print("\nComparison of Policies:")
     print("Random Policy - Mean Reward:", random_mean)
@@ -258,16 +272,26 @@ if __name__ == "__main__":
     else:
         print("Random policy performs better or equal to learned policy.")
 
-    # Plot
-    plt.plot(stored_mean_SARSA)
-    plt.plot(stored_mean_Q,alpha=0.5)
-    plt.legend(["SARSA", "Q-Learning"])
+    # Plot means
+    plt.plot(stored_mean_SARSA, color='blue', alpha = 0.5)
+    plt.plot(running_average_mean_SARSA, color='blue')
+    plt.plot(stored_mean_Q, color='orange',alpha=0.5)
+    plt.plot(running_average_mean_Q, color='orange')
+    plt.legend(["SARSA", "SARSA Running Average", "Q-Learning", "Q-Learning Running Average"])
     plt.title("Mean")
+    plt.xlabel('Epoch')
+    plt.ylabel('Score')
+
+    # Plot standard deviations
     plt.figure()
-    plt.plot(stored_std_dev_SARSA)
-    plt.plot(stored_std_dev_Q,alpha=0.5)
-    plt.legend(["SARSA", "Q-Learning"])
+    plt.plot(stored_std_dev_SARSA, color='blue', alpha = 0.5)
+    plt.plot(running_average_std_SARSA, color='blue')
+    plt.plot(stored_std_dev_Q, color='orange',alpha=0.5)
+    plt.plot(running_average_std_Q, color='orange')
+    plt.legend(["SARSA", "SARSA Running Average", "Q-Learning", "Q-Learning Running Average"])
     plt.title("Standard Deviation")
+    plt.xlabel('Epoch')
+    plt.ylabel('Score')
     plt.figure()
 
     # Plot Comparison
